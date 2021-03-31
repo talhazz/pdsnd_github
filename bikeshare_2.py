@@ -3,13 +3,12 @@ import pandas as pd
 import numpy as np
 
 CITY_DATA = { 'chicago': 'chicago.csv',
-              'new york city': 'new_york_city.csv',
+              'new york': 'new_york_city.csv',
               'washington': 'washington.csv' }
 
 def get_filters():
     """
     Asks user to specify a city, month, and day to analyze.
-
     Returns:
         (str) city - name of the city to analyze
         (str) month - name of the month to filter by, or "all" to apply no month filter
@@ -17,13 +16,37 @@ def get_filters():
     """
     print('Hello! Let\'s explore some US bikeshare data!')
     # get user input for city (chicago, new york city, washington). HINT: Use a while loop to handle invalid inputs
+    city = input('Would you like to see data for Chicago, New York, or Washington? ')
+    while city not in(CITY_DATA.keys()):
+        print('You provided invalid city name')
+        city = input('Would you like to see data for Chicago, New York, or Washington? ').lower()
+
+    # get user input for filter type (month, day or both).
+    filter = input('Would you like to filter the data by month, day, both, or none? ').lower()
+    while filter not in(['month', 'day', 'both', 'none']):
+        print('You provided invalid filter')
+        filter = input('Would you like to filter the data by month, day, both, or none? ').lower()
 
 
     # get user input for month (all, january, february, ... , june)
-
+    months = ['january', 'february', 'march', 'april', 'may', 'june']
+    if filter == 'month' or filter == 'both':
+        month = input('Which month - January, February, March, April, May, or June? ').lower()
+        while month not in months:
+            print('You provided invalid month')
+            month = input('Which month - January, February, March, April, May, or June? ').lower()
+    else:
+        month = 'all'
 
     # get user input for day of week (all, monday, tuesday, ... sunday)
-
+    days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+    if filter == 'day' or filter == 'both':
+        day = input('Which day - Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, or Sunday? ').title()
+        while day not in days:
+            print('You provided invalid day')
+            day = input('Which day - Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, or Sunday? ').title()
+    else:
+        day = 'all'
 
     print('-'*40)
     return city, month, day
@@ -32,7 +55,6 @@ def get_filters():
 def load_data(city, month, day):
     """
     Loads data for the specified city and filters by month and day if applicable.
-
     Args:
         (str) city - name of the city to analyze
         (str) month - name of the month to filter by, or "all" to apply no month filter
@@ -40,16 +62,15 @@ def load_data(city, month, day):
     Returns:
         df - Pandas DataFrame containing city data filtered by month and day
     """
+    # load data file into a dataframe
+    df = pd.read_csv(CITY_DATA[city])
 
+    # convert the Start Time column to datetime
+    df['Start Time'] = pd.to_datetime(df['Start Time'])
 
-    return df
-
-
-def time_stats(df):
-    """Displays statistics on the most frequent times of travel."""
-
-    print('\nCalculating The Most Frequent Times of Travel...\n')
-    start_time = time.time()
+    # extract month and day of week from Start Time to create new columns
+    df['month'] = df['Start Time'].dt.month
+    df['day_of_week'] = df['Start Time'].dt.day_name()
 
     # display the most common month
 
