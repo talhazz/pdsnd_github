@@ -41,3 +41,8 @@ The link for commit message style reference for this project is given below :
 
 https://udacity.github.io/git-styleguide/
 
+### Softwares needed:
+
+Python 3, NumPy, and Pandas installed using Anaconda
+A text editor, like VS Code or Atom.
+A terminal application (Terminal on Mac and Linux or Cygwin on Windows).
